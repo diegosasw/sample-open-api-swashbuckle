@@ -1,7 +1,7 @@
 # sample-open-api
 Open Api definitions available in GitHub pages at https://diegosasw.github.io/sample-open-api/
 
-## How to export OpenApi documents
+## Exporting OpenAPI Documents
 The OpenApi documents can be 
 1. manually generated
 2. manually downloaded
@@ -11,12 +11,23 @@ Since the sample web applications are created using AspNetCore and Swashbuckle, 
 to export the OpenApi document which could be triggered during CI/CD pipeline and copied into the `/docs` folder
 so that the documents are served by http.
 
-This mechanism is just one possible approach to generate and publish OpenApi documents for testing purposes.
+## Local Development
+This solution follows one possible approach to generate and publish OpenApi documents for testing purposes.
 
-Install the Swashbuckle CLI as a global dotnet tool
+It uses `Swashbuckle.AspNetCore.Cli` dotnet tool installed locally.
+
+When cloning the repository, run the following to restore nuget dependencies
 ```
-dotnet tool install --global Swashbuckle.AspNetCore.Cli
+dotnet restore
 ```
+
+and then run the following to restore dotnet tools
+```
+dotnet tool restore
+```
+
+NOTE: This solution includes a `dotnet-tools.json` stating the dotnet tools to restore because a manifest was created
+with `dotnet new tool-manifest` and a local dotnet tool was added to the manifest with `dotnet tool install Swashbuckle.AspNetCore.Cli`.
 
 Compile the solution
 ```
@@ -42,9 +53,12 @@ The arguments are described below:
 - `startupassembly` is the path to the dll which contains the Startup
 - `swaggerdoc` is the swagger doc name, by default `v1`, which can be configured in the options of the `AddSwaggerGen` method.
 
-Run the following
+Run the following:
 ```
 dotnet swagger tofile --output temp/web-api-one.json src/WebApiOne/bin/Release/net8.0/WebApiOne.dll web-api-one
+```
+and
+```
 dotnet swagger tofile --output temp/web-api-two.json src/WebApiTwo/bin/Release/net8.0/WebApiTwo.dll web-api-two
 ```
 
@@ -54,9 +68,17 @@ The two OpenApi documents will be placed in the `temp` folder ready to be moved 
 mv temp/* docs/
 ```
 
-IMPORTANT: Make sure the Swashbuckle.AspNetCore dependency version matches the CLI.
-If your CLI has a different version, the export might fail
-Check dotnet tool version with
+The `docs` folder now has the two OpenApi documents. This folder can released in a static http server or similar so that
+there are links to the OpenAPI documents that other tools or applications can use.
+
+## Common Issues
+
+### Error Generating OpenApi Document
+Make sure the `Swashbuckle.AspNetCore` dependency version matches the CLI.
+If your CLI has a different version, the export might fail, that's why using versioned `dotnet-tools.json` manifest
+is recommended to avoid mismatches.
+
+Check dotnet tool version with:
 ```
 dotnet tool list
 ```
