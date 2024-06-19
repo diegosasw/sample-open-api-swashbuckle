@@ -15,7 +15,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     concurrency: ci-${{ github.ref }}
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -37,17 +37,22 @@ jobs:
       - name: Create temp directory
         run: mkdir temp
 
-      - name: Generate Swagger document for WebApiOne
+      - name: Generate Swagger for WebApiOne
         run: dotnet swagger tofile --output temp/web-api-one.json src/WebApiOne/bin/Release/net8.0/WebApiOne.dll web-api-one
 
-      - name: Generate OpenApi document for WebApiTwo
+      - name: Generate Swagger for WebApiTwo
         run: dotnet swagger tofile --output temp/web-api-two.json src/WebApiTwo/bin/Release/net8.0/WebApiTwo.dll web-api-two
 
-      - name: Copy OpenApi documents to docs
+      - name: Ensure docs directory exists
+        run: mkdir -p docs
+
+      - name: Copy Swagger files to docs
         run: cp -r temp/* docs/
 
-      - name: Deploy 🚀
-          uses: JamesIves/github-pages-deploy-action@v4
-          with:
-            branch: gh-pages # The branch the action should deploy to.
-            folder: docs # The folder the action should deploy.
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: docs # The folder the action should deploy.
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
