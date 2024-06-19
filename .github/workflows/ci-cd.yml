@@ -63,7 +63,7 @@ jobs:
           name: swagger-files
           path: docs
 
-      - name: List contents of docs folder
+      - name: List contents of docs directory
         run: ls -R docs
 
       - name: Deploy to GitHub Pages
