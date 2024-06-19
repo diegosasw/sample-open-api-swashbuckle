@@ -1,0 +1,56 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build the project
+        run: dotnet build -c Release
+
+      - name: Install local tools
+        run: dotnet tool restore
+
+      - name: Create temp directory
+        run: mkdir temp
+
+      - name: Generate Swagger for WebApiOne
+        run: dotnet swagger tofile --output temp/web-api-one.json src/WebApiOne/bin/Release/net8.0/WebApiOne.dll web-api-one
+
+      - name: Generate Swagger for WebApiTwo
+        run: dotnet swagger tofile --output temp/web-api-two.json src/WebApiTwo/bin/Release/net8.0/WebApiTwo.dll web-api-two
+
+      - name: Create docs directory
+        run: mkdir -p docs
+
+      - name: Move Swagger files to docs
+        run: mv temp/* docs/
+
+      - name: Commit and push Swagger files
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/
+          git commit -m "Update Swagger documents"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
