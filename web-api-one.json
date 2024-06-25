@@ -113,6 +113,10 @@
             "type": "string",
             "nullable": true
           },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
           "startsOn": {
             "type": "string",
             "format": "date-time"
