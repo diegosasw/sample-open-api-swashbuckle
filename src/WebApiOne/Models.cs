@@ -15,6 +15,7 @@ public static class Models
     {
         public string? Id { get; set; }
         public string Name { get; init; } = string.Empty;
+        public string DisplayName { get; init; } = string.Empty;
         public DateTime StartsOn { get; init; }
         public IEnumerable<Member> Members { get; init; } = [];
 
