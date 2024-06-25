@@ -91,6 +91,11 @@
             "type": "string",
             "nullable": true
           },
+          "departmentId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "isDeveloper": {
             "type": "boolean"
           }
