@@ -87,6 +87,10 @@
             "type": "string",
             "nullable": true
           },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
           "isDeveloper": {
             "type": "boolean"
           }
