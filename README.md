@@ -71,6 +71,9 @@ mv temp/* docs/
 The `docs` folder now has the two OpenApi documents. This folder can released in a static http server or similar so that
 there are links to the OpenAPI documents that other tools or applications can use.
 
+## Tokens used 
+There is a need to create a Personal Access Token with `repo` and `workflow` scopes (i.e: `PAT_TRIGGER_REPO`) to trigger repository dispatch with custom event.
+
 ## Common Issues
 
 ### Error Generating OpenApi Document
